@@ -3,6 +3,7 @@ import { z } from "zod";
 import { AmaActivityFormats } from "@/components/ama-activity-formats";
 import { CreditTypes } from "@/components/credit-types";
 import { TextField } from "@/components/text-field";
+import { ConditionalField } from "@/components/conditional-field";
 
 export type SectionConfig = {
   introText?: string;
@@ -33,6 +34,24 @@ export const basicInformation = {
       defaultValue: "",
       validation: z.string().min(1, "Required"),
       element: <AmaActivityFormats />,
+    },
+    journalName: {
+      defaultValue: "",
+      // Validating conditional fields requires performing a refinement on the
+      // entire schema object since we need access to the value of the "parent"
+      // field. I don't know how to do that dynamically.
+      validation: z.any(),
+      element: (
+        <ConditionalField
+          conditions={[
+            ["amaActivityFormat", "2"],
+            ["name", "Test"],
+          ]}
+          mode="allOf"
+        >
+          <TextField name="Journal Name" label="Journal Name" />
+        </ConditionalField>
+      ),
     },
     deliveryMethod: {
       defaultValue: "",
