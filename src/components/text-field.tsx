@@ -22,8 +22,6 @@ type TextFieldProps<T extends FieldValues> = {
 export function TextField<T extends FieldValues>(props: TextFieldProps<T>) {
   const form = useFormContext();
 
-  console.log("values for " + props.name, form.getValues(props.name));
-
   return (
     <FormField
       control={form.control}
