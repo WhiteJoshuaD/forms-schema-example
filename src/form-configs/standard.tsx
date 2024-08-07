@@ -37,19 +37,22 @@ export const basicInformation = {
     },
     journalName: {
       defaultValue: "",
-      // Validating conditional fields requires performing a refinement on the
-      // entire schema object since we need access to the value of the "parent"
-      // field. I don't know how to do that dynamically.
       validation: z.any(),
       element: (
         <ConditionalField
           conditions={[
-            ["amaActivityFormat", "2"],
-            ["name", "Test"],
+            { field: "name", operator: "neq", value: "Test" },
+            { field: "amaActivityFormat", value: "2" },
           ]}
           mode="allOf"
+          customValidation={(data, fieldName) => {
+            if (data[fieldName].length < 5) {
+              return "Journal Name must be at least 5 characters long";
+            }
+            return null;
+          }}
         >
-          <TextField name="Journal Name" label="Journal Name" />
+          <TextField name="journalName" label="Journal Name" />
         </ConditionalField>
       ),
     },
